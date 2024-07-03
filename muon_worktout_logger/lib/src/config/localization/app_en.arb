@@ -1,0 +1,6 @@
+{
+  "appTitle": "muon_workout_logger",
+  "@appTitle": {
+    "description": "Log your workouts"
+  }
+}
