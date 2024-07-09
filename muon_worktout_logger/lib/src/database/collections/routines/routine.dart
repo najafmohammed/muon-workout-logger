@@ -13,5 +13,5 @@ class Routine {
   late DateTime lastRun;
 
   @Backlink(to: "routines")
-  final workout = IsarLinks<Workout>();
+  final workouts = IsarLinks<Workout>();
 }

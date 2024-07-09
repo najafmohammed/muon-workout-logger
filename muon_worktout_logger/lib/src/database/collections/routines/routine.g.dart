@@ -49,9 +49,9 @@ const RoutineSchema = CollectionSchema(
     )
   },
   links: {
-    r'workout': LinkSchema(
+    r'workouts': LinkSchema(
       id: -8049777853623616862,
-      name: r'workout',
+      name: r'workouts',
       target: r'Workout',
       single: false,
       linkName: r'routines',
@@ -118,12 +118,12 @@ Id _routineGetId(Routine object) {
 }
 
 List<IsarLinkBase<dynamic>> _routineGetLinks(Routine object) {
-  return [object.workout];
+  return [object.workouts];
 }
 
 void _routineAttach(IsarCollection<dynamic> col, Id id, Routine object) {
   object.id = id;
-  object.workout.attach(col, col.isar.collection<Workout>(), r'workout', id);
+  object.workouts.attach(col, col.isar.collection<Workout>(), r'workouts', id);
 }
 
 extension RoutineQueryWhereSort on QueryBuilder<Routine, Routine, QWhere> {
@@ -488,52 +488,52 @@ extension RoutineQueryObject
 
 extension RoutineQueryLinks
     on QueryBuilder<Routine, Routine, QFilterCondition> {
-  QueryBuilder<Routine, Routine, QAfterFilterCondition> workout(
+  QueryBuilder<Routine, Routine, QAfterFilterCondition> workouts(
       FilterQuery<Workout> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'workout');
+      return query.link(q, r'workouts');
     });
   }
 
-  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutLengthEqualTo(
+  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutsLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workout', length, true, length, true);
+      return query.linkLength(r'workouts', length, true, length, true);
     });
   }
 
-  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutIsEmpty() {
+  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workout', 0, true, 0, true);
+      return query.linkLength(r'workouts', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutIsNotEmpty() {
+  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workout', 0, false, 999999, true);
+      return query.linkLength(r'workouts', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutLengthLessThan(
+  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workout', 0, true, length, include);
+      return query.linkLength(r'workouts', 0, true, length, include);
     });
   }
 
   QueryBuilder<Routine, Routine, QAfterFilterCondition>
-      workoutLengthGreaterThan(
+      workoutsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workout', length, include, 999999, true);
+      return query.linkLength(r'workouts', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutLengthBetween(
+  QueryBuilder<Routine, Routine, QAfterFilterCondition> workoutsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -541,7 +541,7 @@ extension RoutineQueryLinks
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'workout', lower, includeLower, upper, includeUpper);
+          r'workouts', lower, includeLower, upper, includeUpper);
     });
   }
 }

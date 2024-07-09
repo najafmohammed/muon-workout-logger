@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:muon_workout_logger/src/database/collections/excercise/excercise.dart';
+import 'package:muon_workout_logger/src/database/collections/routines/routine.dart';
 
 part 'workout.g.dart';
 

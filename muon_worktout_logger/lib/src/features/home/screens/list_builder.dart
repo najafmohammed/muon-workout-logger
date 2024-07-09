@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:muon_workout_logger/src/database/collections/isar_service.dart';
+import 'package:muon_workout_logger/src/database/collections/routines/routine_service.dart';
 import 'package:muon_workout_logger/src/database/collections/workouts/workout_service.dart';
 import 'package:muon_workout_logger/src/features/routines/screens/create_routine.dart';
-import 'package:muon_workout_logger/src/features/workout/screens/modify_workout.dart';
+import 'package:muon_workout_logger/src/features/workout/screens/create_workout.dart';
 
-class ViewPrograms extends StatefulWidget {
-  const ViewPrograms(
+class ViewListBuilder extends StatefulWidget {
+  const ViewListBuilder(
       {super.key,
       required this.title,
       required this.futureData,
@@ -15,10 +16,10 @@ class ViewPrograms extends StatefulWidget {
   final bool isRoutine;
 
   @override
-  State<ViewPrograms> createState() => _ViewProgramsState();
+  State<ViewListBuilder> createState() => _ViewListBuilderState();
 }
 
-class _ViewProgramsState extends State<ViewPrograms> {
+class _ViewListBuilderState extends State<ViewListBuilder> {
   TextEditingController editingController = TextEditingController();
 
   @override
@@ -65,17 +66,24 @@ class _ViewProgramsState extends State<ViewPrograms> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => CreateWorkout(
-                                              id: snapshot.data![index].id,
-                                            )));
+                                        builder: (context) => widget.isRoutine
+                                            ? CreateRoutine(
+                                                id: snapshot.data![index].id)
+                                            : CreateWorkout(
+                                                id: snapshot.data![index].id,
+                                              )));
                               },
                               icon: const Icon(
                                 Icons.edit,
                               )),
                           IconButton(
                               onPressed: () {
-                                WorkoutService(IsarService.isarInstance)
-                                    .deleteWorkout(snapshot.data![index].id);
+                                widget.isRoutine
+                                    ? RoutineService(IsarService.isarInstance)
+                                        .deleteRoutine(snapshot.data![index].id)
+                                    : WorkoutService(IsarService.isarInstance)
+                                        .deleteWorkout(
+                                            snapshot.data![index].id);
                               },
                               icon: const Icon(
                                 Icons.delete,

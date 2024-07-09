@@ -40,7 +40,7 @@ class Home extends StatelessWidget {
             ),
             CardButton(
               icon: const Icon(Icons.add),
-              label: 'New Routine',
+              label: 'Start Routine',
               callback: () {},
             ),
             const SizedBox(
@@ -48,7 +48,7 @@ class Home extends StatelessWidget {
             ),
             CardButton(
               icon: const Icon(Icons.add),
-              label: 'New Workout',
+              label: 'Start Workout',
               callback: () {},
             ),
             Padding(
@@ -65,7 +65,7 @@ class Home extends StatelessWidget {
                     callback: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => ViewPrograms(
+                          builder: (context) => ViewListBuilder(
                             futureData: WorkoutService(IsarService.isarInstance)
                                 .streamWorkouts(),
                             title: 'All Workouts',
@@ -82,7 +82,7 @@ class Home extends StatelessWidget {
                     callback: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => ViewPrograms(
+                          builder: (context) => ViewListBuilder(
                             futureData: RoutineService(IsarService.isarInstance)
                                 .streamRoutines(),
                             isRoutine: true,

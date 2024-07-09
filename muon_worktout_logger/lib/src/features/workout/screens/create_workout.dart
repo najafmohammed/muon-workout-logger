@@ -53,12 +53,12 @@ class _CreateWorkoutState extends State<CreateWorkout> {
   List<ExerciseMetric> metric = [];
   @override
   Widget build(BuildContext context) {
-    bool edit = widget.id == 0;
+    bool edit = widget.id != 0;
     final GlobalKey<FormBuilderState> formKey =
-        edit ? createFormKey : editFormKey;
+        edit ? editFormKey : createFormKey;
     return Scaffold(
       appBar: AppBar(
-        title: Text(edit ? 'Create new Workout' : "Edit Workout"),
+        title: Text(edit ? "Edit Workout" : 'Create new Workout'),
         actions: [
           IconButton(
               onPressed: () => Navigator.pop(context),
@@ -77,9 +77,7 @@ class _CreateWorkoutState extends State<CreateWorkout> {
             workout.name = "";
             workout.exerciseMetric = [];
             workout.muscleGroup = MuscleGroup.other;
-            // return Text("2");
             return createWorkoutForm(workout: workout, formkey: createFormKey);
-            // to do - > split edit and create workout into two but keep whatever we can the same
           }
         },
       )),
@@ -93,13 +91,13 @@ class _CreateWorkoutState extends State<CreateWorkout> {
             workout.exerciseMetric = formData?['exerciseMetric'];
             workout.muscleGroup = formData?['muscleGroup'];
             if (edit) {
-              await WorkoutService(IsarService.isarInstance)
-                  .addWorkout(workout)
-                  .then((_) => Navigator.of(context).pop());
-            } else {
               workout.id = widget.id;
               await WorkoutService(IsarService.isarInstance)
                   .updateWorkout(workout)
+                  .then((_) => Navigator.of(context).pop());
+            } else {
+              await WorkoutService(IsarService.isarInstance)
+                  .addWorkout(workout)
                   .then((_) => Navigator.of(context).pop());
             }
           }

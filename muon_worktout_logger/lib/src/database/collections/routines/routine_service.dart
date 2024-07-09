@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
-import 'package:muon_workout_logger/src/database/collections/excercise/excercise.dart';
+import 'package:muon_workout_logger/src/database/collections/routines/routine.dart';
 
 class RoutineService extends ChangeNotifier {
   RoutineService(this.isar);
@@ -12,26 +12,26 @@ class RoutineService extends ChangeNotifier {
     await fetchRoutines();
   }
 
-  // Future<void> updateWorkout(Workout workout) async {
-  //   var existingWorkout = await isar.workouts.get(workout.id);
-  //   if (existingWorkout != null) {
-  //     existingWorkout = workout;
-  //     await isar.writeTxn(() => isar.workouts.put(existingWorkout!));
-  //   }
-  //   await fetchWorkouts();
-  // }
+  Future<void> updateRoutine(Routine routine) async {
+    var existingRoutine = isar.routines.getSync(routine.id);
+    if (existingRoutine != null) {
+      existingRoutine = routine;
+      isar.writeTxnSync(() => isar.routines.putSync(existingRoutine!));
+    }
+    await fetchRoutines();
+  }
 
-  // Future<void> deleteWorkout(int id) async {
-  //   var existingWorkout = await isar.workouts.get(id);
-  //   if (existingWorkout != null) {
-  //     await isar.writeTxn(() => isar.workouts.delete(id));
-  //     await fetchWorkouts();
-  //   }
-  // }
+  Future<void> deleteRoutine(int id) async {
+    var existingRoutine = await isar.routines.get(id);
+    if (existingRoutine != null) {
+      await isar.writeTxn(() => isar.routines.delete(id));
+      await fetchRoutines();
+    }
+  }
 
-  // Future<Workout?> getWorkout(int id) async {
-  //   return await isar.workouts.get(id);
-  // }
+  Future<Routine?> getRoutine(int id) async {
+    return await isar.routines.get(id);
+  }
 
   Future<List<Routine>> fetchRoutines() async {
     List<Routine> routines = await isar.routines.where().findAll();

@@ -4,12 +4,15 @@ import 'package:muon_workout_logger/src/utils/widgets/animated_selection.dart';
 
 class AddWorkoutToRoutine extends StatefulWidget {
   const AddWorkoutToRoutine({
-    super.key,
+    Key? key,
     required this.title,
     required this.futureData,
-  });
+    required this.initialSelectedWorkouts,
+  }) : super(key: key);
+
   final String title;
-  final Future<dynamic> futureData;
+  final Future<List<Workout>> futureData;
+  final List<Workout> initialSelectedWorkouts;
 
   @override
   State<AddWorkoutToRoutine> createState() => _AddWorkoutToRoutineState();
@@ -18,7 +21,17 @@ class AddWorkoutToRoutine extends StatefulWidget {
 class _AddWorkoutToRoutineState extends State<AddWorkoutToRoutine> {
   TextEditingController editingController = TextEditingController();
   final List<Workout> _selectedWorkouts = [];
+  late List<Workout> _availableWorkouts;
   bool _addWorkouts = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedWorkouts.clear(); // Clear previously selected workouts
+    _selectedWorkouts.addAll(
+        widget.initialSelectedWorkouts); // Add initial selected workouts
+    _addWorkouts = _selectedWorkouts.isNotEmpty; // Update addWorkouts flag
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,64 +42,64 @@ class _AddWorkoutToRoutineState extends State<AddWorkoutToRoutine> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               onChanged: (value) {},
               controller: editingController,
               decoration: const InputDecoration(
-                  labelText: "Search",
-                  hintText: "Search",
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                labelText: "Search",
+                hintText: "Search",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                ),
+              ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            FutureBuilder(
-              future: widget.futureData,
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data == null || snapshot.data!.isEmpty) {
-                    return const Text("empty");
-                  } else {
-                    return Expanded(
-                        child: ListView.separated(
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const Divider(),
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) => ListTile(
-                                  title: Text(snapshot.data![index].name),
-                                  selected: _selectedWorkouts
-                                      .contains(snapshot.data![index]),
-                                  onTap: () {
-                                    setState(() {
-                                      if (_selectedWorkouts
-                                          .contains(snapshot.data![index])) {
-                                        _selectedWorkouts
-                                            .remove(snapshot.data![index]);
-                                      } else {
-                                        _selectedWorkouts
-                                            .add(snapshot.data![index]);
-                                      }
-                                      if (_selectedWorkouts.isNotEmpty) {
-                                        _addWorkouts = true;
-                                      } else {
-                                        _addWorkouts = false;
-                                      }
-                                    });
-                                  },
-                                  trailing: AnimatedSelection(
-                                    isSelected: _selectedWorkouts
-                                        .contains(snapshot.data![index]),
-                                  ),
-                                )));
+            const SizedBox(height: 10),
+            Expanded(
+              child: FutureBuilder<List<Workout>>(
+                future: widget.futureData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
                   }
-                } else {
-                  return const Text("empty");
-                }
-              }),
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  if (snapshot.hasData && snapshot.data != null) {
+                    _availableWorkouts = snapshot.data!;
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => const Divider(),
+                      itemCount: _availableWorkouts.length,
+                      itemBuilder: (context, index) {
+                        final workout = _availableWorkouts[index];
+                        final isSelected = _selectedWorkouts.contains(workout);
+
+                        return ListTile(
+                          title: Text(workout.name),
+                          selected: isSelected,
+                          onTap: () {
+                            setState(() {
+                              if (isSelected) {
+                                _selectedWorkouts.remove(workout);
+                              } else {
+                                _selectedWorkouts.add(workout);
+                              }
+                              _addWorkouts = _selectedWorkouts.isNotEmpty;
+                            });
+                          },
+                          trailing: AnimatedSelection(isSelected: isSelected),
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(child: Text('No workouts available.'));
+                  }
+                },
+              ),
             ),
           ],
         ),

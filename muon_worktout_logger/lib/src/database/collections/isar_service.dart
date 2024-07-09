@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:muon_workout_logger/src/database/collections/dashboard/dashboard.dart';
-import 'package:muon_workout_logger/src/database/collections/excercise/excercise.dart';
+import 'package:muon_workout_logger/src/database/collections/routines/routine.dart';
 import 'package:muon_workout_logger/src/database/collections/workouts/workout.dart';
 import 'package:path_provider/path_provider.dart';
 
